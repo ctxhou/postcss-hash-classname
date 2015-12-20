@@ -27,6 +27,7 @@ module.exports = postcss.plugin('postcss-classname', function (opts) {
 
   return function (css) {
     var sourcePath = css.source.input.file;
+    // console.log(sourcePath)
     css.walkRules(function (rule) {
       var selector = rule.selector;
       if (selector[0] === '.') {
@@ -44,7 +45,9 @@ module.exports = postcss.plugin('postcss-classname', function (opts) {
       currentPath = path.resolve(currentPath, dist);
       outputFile = currentPath + '/' + outputName + type;
     } else {
-      outputFile = [dist, filename].join('/');
+      outputFile = [dist, outputName].join('/');
+      outputFile += type;
+      console.log(outputFile)
     }
     fs.writeFile(outputFile, writefile(pair, type));
   };

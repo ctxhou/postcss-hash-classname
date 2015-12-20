@@ -18,7 +18,7 @@ gulp.task('test', function() {
     .pipe(mocha());
 });
 
-gulp.task('default', ['lint', 'test']);
+gulp.task('default', ['test']);
 
 gulp.task('watch', function() {
   gulp.watch(files, ['test']);

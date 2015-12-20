@@ -8,6 +8,7 @@ describe('postcss-classname', function () {
   var opts = { hashType: 'md5', digestType: 'base32' };
   it('change class name', function () {
     opts.maxLength = 6;
+    opts.outputName = 'test1';
     var processor = postcss([ plugin(opts) ]);
     var testcss = '.test{}';
     var testcssLength = testcss.replace('{}', '').length;
@@ -16,16 +17,17 @@ describe('postcss-classname', function () {
   });
 
   it('not class didnt change', function () {
-    var processor = postcss([plugin()]);
+    opts.outputName = 'test2';
+    var processor = postcss([plugin(opts)]);
     var testcss1 = '#id{}';
     var testcss2 = 'body{}';
     expect(processor.process(testcss1).css).to.equal(testcss1);
     expect(processor.process(testcss2).css).to.equal(testcss2);
   });
 
-  it('test from file', function() {
-    var processor = postcss([plugin()]);
-    // processor.process()
+  // it('test from file', function() {
+  //   var processor = postcss([plugin()]);
+  //   // processor.process()
 
-  })
+  // })
 });
