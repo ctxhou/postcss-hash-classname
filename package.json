@@ -1,0 +1,32 @@
+{
+  "name": "postcss-classname",
+  "version": "0.0.0",
+  "description": "PostCSS plugin keep class name",
+  "keywords": [
+    "postcss",
+    "css",
+    "postcss-plugin",
+    "postcss-classname"
+  ],
+  "author": "JackHou <vjack070707@gmail.com>",
+  "license": "MIT",
+  "repository": "ctxhou/postcss-classname",
+  "bugs": {
+    "url": "https://github.com/ctxhou/postcss-classname/issues"
+  },
+  "homepage": "https://github.com/ctxhou/postcss-classname",
+  "dependencies": {
+    "loader-utils": "^0.2.12",
+    "postcss": "^5.0.10"
+  },
+  "devDependencies": {
+    "gulp-eslint": "1.0.0",
+    "gulp-mocha": "2.1.3",
+    "mocha": "2.2.5",
+    "chai": "3.2.0",
+    "gulp": "3.9.0"
+  },
+  "scripts": {
+    "test": "gulp test"
+  }
+}
