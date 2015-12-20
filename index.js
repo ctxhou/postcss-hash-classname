@@ -47,7 +47,6 @@ module.exports = postcss.plugin('postcss-classname', function (opts) {
     } else {
       outputFile = [dist, outputName].join('/');
       outputFile += type;
-      console.log(outputFile)
     }
     fs.writeFile(outputFile, writefile(pair, type));
   };
