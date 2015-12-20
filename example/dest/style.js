@@ -1,0 +1,1 @@
+module.exports={"yoman":".yoman-3p5axm"}

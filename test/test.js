@@ -22,4 +22,10 @@ describe('postcss-classname', function () {
     expect(processor.process(testcss1).css).to.equal(testcss1);
     expect(processor.process(testcss2).css).to.equal(testcss2);
   });
+
+  it('test from file', function() {
+    var processor = postcss([plugin()]);
+    // processor.process()
+
+  })
 });
