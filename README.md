@@ -88,6 +88,8 @@ Value: maxLength the maximum length in chars
 
 Default: 6
 
+**ps**: reference [loader-utils.getHashDigest](https://github.com/webpack/loader-utils#gethashdigest) to know more.
+
 #### `outputName`
 
 filename of the `.js/.json`
