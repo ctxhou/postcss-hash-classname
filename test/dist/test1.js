@@ -1,0 +1,1 @@
+module.exports={"test":"test-6hnfdf"}
