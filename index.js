@@ -2,6 +2,7 @@ var fs = require('fs');
 var path = require('path');
 var postcss = require('postcss');
 var loaderUtils = require('loader-utils');
+var parser = require('postcss-selector-parser');
 
 function writefile(pair, type) {
   var string = JSON.stringify(pair);
@@ -28,8 +29,8 @@ module.exports = postcss.plugin('postcss-classname', function (opts) {
   return function (css) {
     var pair = {};
     var sourcePath = css.source.input.file;
-
     css.walkRules(function (rule) {
+      console.log(rule.source)
       var selectors = rule.selectors;
       var selectors = selectors.map(function(selector){
         if (selector[0] === '.') {
