@@ -1,3 +1,4 @@
+var fs = require('fs');
 var postcss = require('postcss');
 var expect  = require('chai').expect;
 
@@ -8,6 +9,7 @@ describe('postcss-classname', function () {
   var opts = { hashType: 'md5', digestType: 'base32' };
   it('change class name', function () {
     opts.maxLength = 6;
+    opts.dist = './dist/';
     opts.outputName = 'test1';
     var processor = postcss([ plugin(opts) ]);
     var testcss = '.test{}';
@@ -17,6 +19,7 @@ describe('postcss-classname', function () {
   });
 
   it('not class didnt change', function () {
+    opts.dist = './dist/';
     opts.outputName = 'test2';
     var processor = postcss([plugin(opts)]);
     var testcss1 = '#id{}';
@@ -25,9 +28,13 @@ describe('postcss-classname', function () {
     expect(processor.process(testcss2).css).to.equal(testcss2);
   });
 
-  // it('test from file', function() {
-  //   var processor = postcss([plugin()]);
-  //   // processor.process()
-
-  // })
+  it('test from file', function() {
+    opts.dist = './dist/';
+    opts.outputName = 'style';
+    var css = fs.readFileSync('./test/test.css', 'utf8');
+    var expected = fs.readFileSync('./test/test-expected.css', 'utf8');
+    var processor = postcss([plugin(opts)]);
+    var result = processor.process(css).css;
+    expect(result).to.equal(expected);
+  })
 });

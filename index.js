@@ -28,15 +28,20 @@ module.exports = postcss.plugin('postcss-classname', function (opts) {
   return function (css) {
     var pair = {};
     var sourcePath = css.source.input.file;
-    // console.log(sourcePath)
+
     css.walkRules(function (rule) {
-      var selector = rule.selector;
-      if (selector[0] === '.') {
-        var className = selector.substring(1);
-        var hash = loaderUtils.getHashDigest(selector, hashType, digestType, maxLength);
-        pair[className] = className + '-' + hash; // write to object
-        rule.selector = selector + '-' + hash; // write to css file
-      }
+      var selectors = rule.selectors;
+      var selectors = selectors.map(function(selector){
+        if (selector[0] === '.') {
+          var className = selector.substring(1);
+          var hash = loaderUtils.getHashDigest(selector, hashType, digestType, maxLength);
+          pair[className] = className + '-' + hash; // write to object
+          return selector + '-' + hash;
+        } else {
+          return selector
+        }
+      })
+      rule.selectors = selectors;
     });
 
     // if it load from file, output the classname object to file path
