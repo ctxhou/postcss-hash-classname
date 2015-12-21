@@ -12,6 +12,11 @@ function writefile(pair, type) {
     return string;
 }
 
+
+// function generateHashString() {
+
+// }
+
 module.exports = postcss.plugin('postcss-classname', function (opts) {
   opts = opts || {};
 
@@ -30,17 +35,21 @@ module.exports = postcss.plugin('postcss-classname', function (opts) {
     var pair = {};
     var sourcePath = css.source.input.file;
     css.walkRules(function (rule) {
-      console.log(rule.source)
       var selectors = rule.selectors;
       var selectors = selectors.map(function(selector){
-        if (selector[0] === '.') {
-          var className = selector.substring(1);
-          var hash = loaderUtils.getHashDigest(selector, hashType, digestType, maxLength);
-          pair[className] = className + '-' + hash; // write to object
-          return selector + '-' + hash;
-        } else {
-          return selector
-        }
+        // to deal with concate classname or pseduo-selector
+        return parser(function(sels) {
+          sels.map(function(sel) {
+            var nodes = sel.nodes;
+            nodes.map(function(node) {
+              if (node.type === 'class') {
+                var hash = loaderUtils.getHashDigest(node.value, hashType, digestType, maxLength);
+                node.value = node.value + '-' + hash;
+              }
+            })
+            sel.nodes = nodes;
+          })
+        }).process(selector).result
       })
       rule.selectors = selectors;
     });
