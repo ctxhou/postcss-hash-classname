@@ -13,8 +13,8 @@ function writefile(pair, type) {
 
 module.exports = postcss.plugin('postcss-classname', function (opts) {
   opts = opts || {};
-  var pair = {},
-      dist = opts.dist || ".",
+
+  var dist = opts.dist || ".",
       outputName = opts.outputName || "style",
       type = opts.type || ".js",
       hashType = opts.hashType || "md5",
@@ -26,6 +26,7 @@ module.exports = postcss.plugin('postcss-classname', function (opts) {
     type = '.' + type;
 
   return function (css) {
+    var pair = {};
     var sourcePath = css.source.input.file;
     // console.log(sourcePath)
     css.walkRules(function (rule) {
@@ -33,9 +34,8 @@ module.exports = postcss.plugin('postcss-classname', function (opts) {
       if (selector[0] === '.') {
         var className = selector.substring(1);
         var hash = loaderUtils.getHashDigest(selector, hashType, digestType, maxLength);
-        var newName = selector + '-' + hash;
-        pair[className] = newName;
-        rule.selector = newName;
+        pair[className] = className + '-' + hash; // write to object
+        rule.selector = selector + '-' + hash; // write to css file
       }
     });
 
