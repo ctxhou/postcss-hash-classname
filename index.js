@@ -43,8 +43,11 @@ module.exports = postcss.plugin('postcss-classname', function (opts) {
             var nodes = sel.nodes;
             nodes.map(function(node) {
               if (node.type === 'class') {
-                var hash = loaderUtils.getHashDigest(node.value, hashType, digestType, maxLength);
-                node.value = node.value + '-' + hash;
+                var value = node.value;
+                var hash = loaderUtils.getHashDigest(value, hashType, digestType, maxLength);
+                var hashName = value + '-' + hash;
+                node.value = hashName;
+                pair[value] = hashName;
               }
             })
             sel.nodes = nodes;

@@ -4,9 +4,9 @@ var expect  = require('chai').expect;
 
 var plugin = require('../');
 
+var opts = { hashType: 'md5', digestType: 'base32' };
 
 describe('postcss-classname', function () {
-  var opts = { hashType: 'md5', digestType: 'base32' };
   it('change class name', function () {
     opts.maxLength = 6;
     opts.dist = './test/dist';
@@ -68,3 +68,24 @@ describe('postcss-classname', function () {
     expect(result).to.equal(expected);
   })
 });
+
+describe('test output file', function() {
+  opts.dist = './test/dist';
+  opts.outputName = 'validate';
+
+  before(function(done){
+    setTimeout(function(){
+      var test = '.asjidf, .djif, .sdf{}';
+      postcss([plugin(opts)]).process(test).css;
+      done();
+    }, 100);
+  });
+
+  it("validate output", function(){
+    var js = require('./dist/validate');
+    var answer = { asjidf: 'asjidf-5j8gya', djif: 'djif-4zw7xd', sdf: 'sdf-hn3hq7' };
+    for (var key in answer) {
+      expect(answer[key]).to.equal(js[key]);
+    }
+  });
+})
