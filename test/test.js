@@ -9,7 +9,7 @@ describe('postcss-classname', function () {
   var opts = { hashType: 'md5', digestType: 'base32' };
   it('change class name', function () {
     opts.maxLength = 6;
-    opts.dist = './dist/';
+    opts.dist = './test/dist';
     opts.outputName = 'test1';
     var processor = postcss([ plugin(opts) ]);
     var testcss = '.test{}';
@@ -19,7 +19,7 @@ describe('postcss-classname', function () {
   });
 
   it('not class didnt change', function () {
-    opts.dist = './dist/';
+    opts.dist = './test/dist';
     opts.outputName = 'test2';
     var processor = postcss([plugin(opts)]);
     var testcss1 = '#id{}';
@@ -29,7 +29,7 @@ describe('postcss-classname', function () {
   });
 
   it('test from file', function() {
-    opts.dist = './dist/';
+    opts.dist = './test/dist';
     opts.outputName = 'style';
     var css = fs.readFileSync('./test/test.css', 'utf8');
     var expected = fs.readFileSync('./test/test-expected.css', 'utf8');
