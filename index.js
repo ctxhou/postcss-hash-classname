@@ -12,11 +12,6 @@ function writefile(pair, type) {
     return string;
 }
 
-
-// function generateHashString() {
-
-// }
-
 module.exports = postcss.plugin('postcss-classname', function (opts) {
   opts = opts || {};
 
@@ -35,8 +30,7 @@ module.exports = postcss.plugin('postcss-classname', function (opts) {
     var pair = {};
     var sourcePath = css.source.input.file;
     css.walkRules(function (rule) {
-      var selectors = rule.selectors;
-      var selectors = selectors.map(function(selector){
+      var selectors = rule.selectors.map(function(selector){
         // to deal with concate classname or pseduo-selector
         return parser(function(sels) {
           sels.map(function(sel) {
