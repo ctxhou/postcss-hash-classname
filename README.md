@@ -36,6 +36,14 @@ module.exports = {
 
 so you can require this js file and set your class name from this object.
 
+## When to use?
+
+If you want to build your own library but afraid your class name would conflict user's class name, it's time to use this package.
+
+And if you organize your project in the component way, postcss-hash-classname will generate corresponding js in each folder.
+
+Check out the `example` folder to know more.
+
 ## Installation
 
 ```

@@ -5,7 +5,7 @@ var opts = {
   hashType: 'md5',
   digestType: 'base32',
   maxLength: 6,
-  outputName: 'yoyo',
+  outputName: 'style',
   type: '.js'
 };
 var processors = [
@@ -13,7 +13,7 @@ var processors = [
 ];
 
 gulp.task('default', function() {
-  return gulp.src(['./**/*.css', '!./dest'])
+  return gulp.src(['./style*/*.css'])
     .pipe(postcss(processors))
     .pipe(gulp.dest('./dest/'));
 });
