@@ -1,6 +1,6 @@
 # postcss-hash-classname [![Build Status][ci-img]][ci]
 
-**postcss-hash-classname** is a [PostCSS] plugin to append the hash string to your css class.
+**postcss-hash-classname** is a [PostCSS] plugin to append the hash string to your css class name.
 
 This plugin is inspired by [extract-text-webpack-plugin](https://github.com/webpack/extract-text-webpack-plugin). I really like webpack and extract-text-webpack-plugin used to solve the css scope problem. In some cases, your projcet doesn't work with webpack or you want to package your projcet to a commonjs/amd/umd library which can't require `css` file. If you still want to keep the unique class name property, this plugin can do the trick!
 
