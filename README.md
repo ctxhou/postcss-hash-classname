@@ -30,7 +30,7 @@ then it would generate the corresponding `js/json` file.
 
 ```js
 module.exports = {
-  foo: ".foo-sdijhfdsifj1"
+  foo: "foo-sdijhfdsifj1"
 }
 ```
 
