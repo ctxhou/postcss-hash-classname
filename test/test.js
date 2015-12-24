@@ -1,4 +1,5 @@
 var fs = require('fs');
+var path = require('path');
 var postcss = require('postcss');
 var expect  = require('chai').expect;
 
@@ -71,11 +72,17 @@ describe('postcss-classname', function () {
 
 describe('test output file', function() {
   opts.dist = './test/dist';
-  opts.outputName = 'validate';
 
   before(function(done){
     setTimeout(function(){
       var test = '.asjidf, .djif, .sdf{}';
+      // test output validate file
+      opts.type = '.js';
+      opts.outputName = 'validate';
+      postcss([plugin(opts)]).process(test).css;
+      // test output json file
+      opts.type = '.json'
+      opts.outputName = 'jsonFile';
       postcss([plugin(opts)]).process(test).css;
       done();
     }, 100);
@@ -88,4 +95,14 @@ describe('test output file', function() {
       expect(answer[key]).to.equal(js[key]);
     }
   });
+
+  it("generate json file", function() {
+    var fileExist = false;
+    fs.stat('./test/dist/jsonFile.json', function(err, stat) {
+        if(err == null) {
+          fileExist = true;
+        }
+      expect(fileExist).to.equal(true);
+    });
+  })
 })

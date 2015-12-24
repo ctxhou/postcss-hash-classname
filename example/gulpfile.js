@@ -5,15 +5,15 @@ var opts = {
   hashType: 'md5',
   digestType: 'base32',
   maxLength: 6,
-  outputName: 'style',
-  type: '.js'
+  outputName: 'sdjifjsofsoidj',
+  type: '.json'
 };
 var processors = [
   require('../')(opts)
 ];
 
 gulp.task('default', function() {
-  return gulp.src(['./style*/*.css'])
+  return gulp.src(['./component*/*.css'])
     .pipe(postcss(processors))
     .pipe(gulp.dest('./dest/'));
 });

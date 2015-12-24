@@ -22,7 +22,6 @@ module.exports = postcss.plugin('postcss-classname', function (opts) {
       digestType = opts.digestType || "base32",
       maxLength = opts.maxLength || 6,
       outputFile;
-
   if (type[0] !== '.')
     type = '.' + type;
 
