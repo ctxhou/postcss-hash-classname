@@ -5,9 +5,9 @@ var expect  = require('chai').expect;
 
 var plugin = require('../');
 
-var opts = { hashType: 'md5', digestType: 'base32' };
 
 describe('postcss-classname', function () {
+  var opts = { hashType: 'md5', digestType: 'base32' };
   it('change class name', function () {
     opts.maxLength = 6;
     opts.dist = './test/dist';
@@ -68,10 +68,22 @@ describe('postcss-classname', function () {
     var result = processor.process(css).css;
     expect(result).to.equal(expected);
   })
+
+  it('return custom suffix and predix', function() {
+    opts.dist = './test/dist';
+    opts.classnameFormat = 'prefix-[classname]_[hash]';
+    var test1 = '.asjidf{}';
+    var processor = postcss([plugin(opts)]);
+    expect(processor.process(test1).css).to.equal(".prefix-asjidf_5j8gya{}");
+
+    opts.classnameFormat = 'prefix-[classname]';
+    var processor2 = postcss([plugin(opts)]);
+    expect(processor2.process(test1).css).to.equal(".prefix-asjidf{}");
+  })
 });
 
 describe('test output file', function() {
-  opts.dist = './test/dist';
+  var opts = { hashType: 'md5', digestType: 'base32', dist: './test/dist' };
 
   before(function(done){
     setTimeout(function(){

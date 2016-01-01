@@ -98,6 +98,41 @@ Default: 6
 
 **ps**: reference [loader-utils.getHashDigest](https://github.com/webpack/loader-utils#gethashdigest) to know more.
 
+#### `classnameFormat`
+
+Default: `[classname]-[hash]`
+
+You can set the output format of your classname.
+
+Take `.example` this class name as the example:
+
+* without hash string. (it return the origin classname)
+
+`[classname]` => output: `example`
+
+* with prefix and without hash string
+
+`prefix-[classname]` => output: `prefix-example`
+
+* with prefix, suffix and hash string
+
+`prefix-[classname]-suffix-[hash] => output: `prefix-example-suffix-sdjif12`
+
+Of course, you can insert any word at any position you want, like
+
+`prefix_[classname]___sufix-[hash]-hey111`
+
+Just remember to keep the `[classname]` and `[hash]` word.
+
+**ps**:
+
+```
+You may find that you dont need to write [classname].
+
+Yeah it's permit. I don't add too many limititation.
+
+Maybe you would need your classname without origin classname in some case.
+```
 #### `outputName`
 
 filename of the `.js/.json`

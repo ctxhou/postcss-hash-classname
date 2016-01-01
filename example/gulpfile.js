@@ -6,6 +6,7 @@ var opts = {
   digestType: 'base32',
   maxLength: 6,
   outputName: 'sdjifjsofsoidj',
+  classnameFormat: 'prefix_[classname]-[hash]',
   type: '.json'
 };
 var processors = [

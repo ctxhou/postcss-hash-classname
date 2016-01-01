@@ -14,14 +14,15 @@ function writefile(pair, type) {
 
 module.exports = postcss.plugin('postcss-classname', function (opts) {
   opts = opts || {};
-
   var dist = opts.dist || ".",
       outputName = opts.outputName || "style",
       type = opts.type || ".js",
       hashType = opts.hashType || "md5",
       digestType = opts.digestType || "base32",
+      classnameFormat = opts.classnameFormat || "[classname]-[hash]",
       maxLength = opts.maxLength || 6,
       outputFile;
+
   if (type[0] !== '.')
     type = '.' + type;
 
@@ -38,9 +39,10 @@ module.exports = postcss.plugin('postcss-classname', function (opts) {
               if (node.type === 'class') {
                 var value = node.value;
                 var hash = loaderUtils.getHashDigest(value, hashType, digestType, maxLength);
-                var hashName = value + '-' + hash;
-                node.value = hashName;
-                pair[value] = hashName;
+                var newClassname = classnameFormat.replace(/\[classname\]/gi, value);
+                newClassname = newClassname.replace(/\[hash\]/gi, hash)
+                node.value = newClassname;
+                pair[value] = newClassname;
               }
             })
             sel.nodes = nodes;
