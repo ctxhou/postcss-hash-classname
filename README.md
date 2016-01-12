@@ -1,4 +1,6 @@
-# postcss-hash-classname [![Build Status][ci-img]][ci]
+# postcss-hash-classname
+
+[![Build Status][ci-img]][ci]  ![david][david]
 
 **postcss-hash-classname** is a [PostCSS] plugin to append the hash string to your css class name.
 
@@ -7,7 +9,7 @@ This plugin is inspired by [extract-text-webpack-plugin](https://github.com/webp
 [PostCSS]: https://github.com/postcss/postcss
 [ci-img]:  https://travis-ci.org/ctxhou/postcss-hash-classname.svg
 [ci]:      https://travis-ci.org/ctxhou/postcss-hash-classname
-
+[david]:   https://david-dm.org/ctxhou/postcss-hash-classname.svg
 
 ## Example
 
