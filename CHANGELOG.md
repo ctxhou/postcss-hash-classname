@@ -1,3 +1,7 @@
+# 0.3.0 - 2016-4-30
+
+Generate hash with file path.
+
 # 0.2.0 -2016-1-1
 
 Add custom class name.

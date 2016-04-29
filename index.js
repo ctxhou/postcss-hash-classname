@@ -38,7 +38,9 @@ module.exports = postcss.plugin('postcss-classname', function (opts) {
             nodes.map(function(node) {
               if (node.type === 'class') {
                 var value = node.value;
-                var hash = loaderUtils.getHashDigest(value, hashType, digestType, maxLength);
+                var hashName = sourcePath ? (value + sourcePath) : value;
+                // get hash and to ensure same class name but different file has different hash
+                var hash = loaderUtils.getHashDigest( hashName, hashType, digestType, maxLength);
                 var newClassname = classnameFormat.replace(/\[classname\]/gi, value);
                 newClassname = newClassname.replace(/\[hash\]/gi, hash)
                 node.value = newClassname;
