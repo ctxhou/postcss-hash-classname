@@ -15,13 +15,13 @@ function writefile(pair, type) {
 module.exports = postcss.plugin('postcss-classname', function (opts) {
   opts = opts || {};
   var dist = opts.dist || ".",
-      outputName = opts.outputName || "style",
-      type = opts.type || ".js",
-      hashType = opts.hashType || "md5",
-      digestType = opts.digestType || "base32",
-      classnameFormat = opts.classnameFormat || "[classname]-[hash]",
-      maxLength = opts.maxLength || 6,
-      outputFile;
+    outputName = opts.outputName || "style",
+    type = opts.type || ".js",
+    hashType = opts.hashType || "md5",
+    digestType = opts.digestType || "base32",
+    classnameFormat = opts.classnameFormat || "[classname]-[hash]",
+    maxLength = opts.maxLength || 6,
+    outputFile;
 
   if (type[0] !== '.')
     type = '.' + type;
@@ -58,7 +58,13 @@ module.exports = postcss.plugin('postcss-classname', function (opts) {
     if (sourcePath) {
       var currentPath = path.dirname(sourcePath);
       currentPath = path.resolve(currentPath, dist);
-      outputFile = currentPath + '/' + outputName + type;
+      // process outputName replacements if any
+      var sourcePathParsed = path.parse(sourcePath),
+        filename = outputName;
+      if (typeof outputName === 'string') {
+        filename = filename.replace(/\[name\]/gi, sourcePathParsed.name);
+      }
+      outputFile = currentPath + '/' + filename + type;
     } else {
       outputFile = [dist, outputName].join('/');
       outputFile += type;
