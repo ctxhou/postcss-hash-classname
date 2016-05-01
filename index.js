@@ -59,10 +59,12 @@ module.exports = postcss.plugin('postcss-classname', function (opts) {
       var currentPath = path.dirname(sourcePath);
       currentPath = path.resolve(currentPath, dist);
       // process outputName replacements if any
-      var sourcePathParsed = path.parse(sourcePath),
-        filename = outputName;
+      var filename = outputName;
       if (typeof outputName === 'string') {
+        var sourcePathParsed = path.parse(sourcePath)
         filename = filename.replace(/\[name\]/gi, sourcePathParsed.name);
+      } else if (typeof outputName === 'function') {
+        filename = outputName(sourcePath);
       }
       outputFile = currentPath + '/' + filename + type;
     } else {

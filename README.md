@@ -160,6 +160,14 @@ Take this source file `mystyle.css` as the example:
 
 `prefix-[name]-suffix` => output: `prefix-mystyle-suffix.js/json`
 
+You can also make `outputName` a callback function that resolves the file on the spot.
+
+The callback function will get the source file's path passed as only argument if source file is known:
+
+* use callback function
+
+function (source) { return (source ? path.parse(source).name : 'style'; } => output: `mystyle.js/json`
+
 #### `dist`
 
 destination folder of your output js/json
