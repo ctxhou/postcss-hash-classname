@@ -58,7 +58,7 @@ module.exports = postcss.plugin('postcss-classname', function (opts) {
     if (sourcePath) {
       var currentPath = path.dirname(sourcePath);
       currentPath = path.resolve(currentPath, dist);
-      // process outputName replacements if any
+      // process outputName replacements or callbacks if any
       var filename = outputName;
       if (typeof outputName === 'string') {
         var sourcePathParsed = path.parse(sourcePath)
