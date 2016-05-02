@@ -1,3 +1,7 @@
+# 0.3.1 - 2016-5-2
+
+Add customize output file name.[[@ofzza](https://github.com/ofzza)] [[#12](https://github.com/ctxhou/postcss-hash-classname/issues/12)]
+
 # 0.3.0 - 2016-4-30
 
 Generate hash with file path.
