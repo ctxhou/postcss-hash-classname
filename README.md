@@ -137,11 +137,28 @@ Yeah it's permit. I don't add too many limititation.
 
 Maybe you would need your classname without origin classname in some case.
 ```
+
 #### `outputName`
 
 filename of the `.js/.json`
 
 Default: `style`
+
+You can set the output format of your `.js/.json` file's filename.
+
+Take this source file `mystyle.css` as the example:
+
+* keeping original filename
+
+`[name]` => output: `mystyle.js/json`
+
+* with prefix and keeping original filename
+
+`prefix-[name]` => output: `prefix-mystyle.js/json`
+
+* with prefix, suffix keeping original filename
+
+`prefix-[name]-suffix` => output: `prefix-mystyle-suffix.js/json`
 
 #### `dist`
 
