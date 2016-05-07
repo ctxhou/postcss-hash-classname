@@ -1,1 +1,3 @@
-module.exports={"test":"test-8qqhmk"}
+module.exports={
+  "test": "test-8qqhmk"
+}

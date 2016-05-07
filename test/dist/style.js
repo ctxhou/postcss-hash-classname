@@ -1,1 +1,4 @@
-module.exports={"asjidf":"prefix-asjidf"}j8gya"}
+module.exports={
+  "asjidf": "prefix-asjidf"
+}8gya"
+}

@@ -82,6 +82,27 @@ function renameClassNode(value, sourcePath, opts) {
 }
 
 /**
+ * Makes sure option is a string and outputs a warning to console if it seems like option is using templating
+ * @param sourcePath Source file's path
+ * @param name Validating option's name
+ * @param value Validating option's value
+ */
+function verifyOptionType(sourcePath, name, value) {
+  if (typeof value === 'object') {
+    var msg = 'POSTCSS-HASH-CLASSNAME ERROR: Object value not supported for option "' + name + '"!';
+    console.error(msg);
+    throw new Error(msg);
+  } else if (!sourcePath && typeof value === 'function') {
+    var msg = 'POSTCSS-HASH-CLASSNAME ERROR: Source file\'s path isn not determined - only explicit values for option "' + name + '" supported! Value passed is a function.';
+    console.error(msg);
+    throw new Error(msg);
+  } else if (!sourcePath && ((value.toString().indexOf('[') >= 0) || (value.toString().indexOf(']') >= 0))) {
+    var msg = 'POSTCSS-HASH-CLASSNAME WARNING: Source file\'s path isn not determined - only explicit values for option "' + name + '" supported! Value passed detected as using templating.';
+    console.warn(msg);
+  }
+}
+
+/**
  * Formats class mapping output for writing to a file of specified type
  * @param mappings Classname to renamed classname mappings repository
  * @param type Output file type
@@ -102,6 +123,7 @@ function formatFileOutput(mappings, type) {
  *  > opts.hashType:        Hash type used for hash generation; hashType e {sha1, md5, sha256, sha512}
  *  > opts.digestType:      Hash digest type for hash generation; digestType e {hex, base26, base32, base36, base49, base52, base58, base62, base64}
  *  > opts.maxLength:       Maximum hash length in chars; reference loader-utils.getHashDigest (https://github.com/webpack/loader-utils#gethashdigest) to know more.
+ *
  *  > opts.classnameFormat: Classname generation formatting definition; supported formatting:
  *    > string:               Used as output class name
  *    > template string:      Used as template for generating output class name; supported template words:
@@ -111,12 +133,39 @@ function formatFileOutput(mappings, type) {
  *      > "[sourcepathash]":    Hash based on source file path
  *    > callback function:  Callback function being passed original classname and source file's path as arguments needs to return replacement classname;
  *                          Callback function format: (classname, sourcePath) => { return [new classname]; }
+ *
  *  > opts.output:      Output file's path or path format definition; supported formatting:
  *    > string:             Used as output file's path
  *    > template string:    Used as template for generating output file's path; supported template words e { [root], [dir], [base], [ext], [name] },
  *                          see path.parse output (https://nodejs.org/api/path.html) for reference
+ *                          Warning: Only supported when source file's path is known
  *    > callback function:  Callback function being passed source file's path needs to return output file's path;
  *                          Callback function format: (sourcePath) => { return [outputPath]; }
+ *                          Warning: Only supported when source file's path is known
+ *  > opts.dist:        Output file's target directory (alternative to using "output" option and providing a full output path); supported formatting:
+ *    > string:             Used as output file's target directory
+ *    > template string:    Used as template for generating output file's target directory; supported template words e { [root], [dir], [base], [ext], [name] },
+ *                          see path.parse output (https://nodejs.org/api/path.html) for reference
+ *                          Warning: Only supported when source file's path is known
+ *    > callback function:  Callback function being passed source file's path needs to return output file's target directory;
+ *                          Callback function format: (sourcePath) => { return [outputDirectory]; }
+ *                          Warning: Only supported when source file's path is known
+ *  > opts.outputName:  Output file's filename (alternative to using "output" option and providing a full output path); supported formatting:
+ *    > string:             Used as output file's filename
+ *    > template string:    Used as template for generating output file's filename; supported template words e { [root], [dir], [base], [ext], [name] },
+ *                          see path.parse output (https://nodejs.org/api/path.html) for reference
+ *                          Warning: Only supported when source file's path is known
+ *    > callback function:  Callback function being passed source file's path needs to return output file's filename;
+ *                          Callback function format: (sourcePath) => { return [outputFilename]; }
+ *                          Warning: Only supported when source file's path is known
+ *  > opts.type:        Output file's extension (alternative to using "output" option and providing a full output path); supported formatting:
+ *    > string:             Used as output file's extension
+ *    > template string:    Used as template for generating output file's extension; supported template words e { [root], [dir], [base], [ext], [name] },
+ *                          see path.parse output (https://nodejs.org/api/path.html) for reference
+ *                          Warning: Only supported when source file's path is known
+ *    > callback function:  Callback function being passed source file's path needs to return output file's extension;
+ *                          Callback function format: (sourcePath) => { return [outputDirectory]; }
+ *                          Warning: Only supported when source file's path is known
  * @return {Function}
  */
 function plugin(opts) {
@@ -128,7 +177,10 @@ function plugin(opts) {
   opts.digestType = opts.digestType || "base32";
   opts.maxLength = opts.maxLength || 6;
   opts.classnameFormat = opts.classnameFormat || "[classname]-[hash]";
-  opts.output = opts.output || "[dir]/[name].json";
+  opts.output = opts.output || null;
+  opts.dist = opts.dist || './';
+  opts.outputName = opts.outputName || 'style';
+  opts.type  = opts.type || '.js';
 
   // Return postcss plugin function
   return function (css) {
@@ -140,26 +192,79 @@ function plugin(opts) {
       rule.selectors = renameSelector(rule.selectors, sourcePath, opts, mappings);
     });
 
-    // Check opts.output format type
-    if (sourcePath && typeof opts.output === 'string') {
+    // Parse source file's path
+    var parsed = path.parse(sourcePath || 'style.css');
+
+    // opts.OUTPUT: Check opts.output format type
+    if (opts.output && typeof opts.output === 'string') {
       // Use opts.output as output path template
-      var parsed = path.parse(sourcePath);
+      verifyOptionType(sourcePath, 'output', opts.output);
       outputFile = opts.output
         .replace(/\[root\]/gi, parsed.root)
         .replace(/\[dir\]/gi, parsed.dir)
         .replace(/\[base\]/gi, parsed.base)
         .replace(/\[ext\]/gi, parsed.ext)
         .replace(/\[name\]/gi, parsed.name);
-    } else if (sourcePath && typeof opts.output === 'function') {
+    } else if (opts.output && typeof opts.output === 'function') {
       // Use opts.output as output path callback
+      verifyOptionType(sourcePath, 'output', opts.output);
       outputFile = opts.output(sourcePath);
-    } else {
-      // Use opts.output as output path
-      outputFile = opts.output;
+    } else if (!opts.output) {
+
+      // opts.DIST: Compose legacy "dist" option
+      verifyOptionType(sourcePath, 'dist', opts.dist);
+      var dist = opts.dist;
+      if (typeof dist === 'string') {
+        // Use opts.dist as output path template
+        dist = dist
+          .replace(/\[root\]/gi, parsed.root)
+          .replace(/\[dir\]/gi, parsed.dir)
+          .replace(/\[base\]/gi, parsed.base)
+          .replace(/\[ext\]/gi, parsed.ext)
+          .replace(/\[name\]/gi, parsed.name);
+      } else if (typeof dist === 'function')  {
+        // Use opts.dist as output path callback
+        dist = dist(sourcePath);
+      }
+      // opts.OUTPUTNAME: Compose legacy "outputName" option
+      verifyOptionType(sourcePath, 'outputName', opts.outputName);
+      var outputName = opts.outputName;
+      if (typeof outputName === 'string') {
+        // Use opts.outputName as output path template
+        outputName = outputName
+          .replace(/\[root\]/gi, parsed.root)
+          .replace(/\[dir\]/gi, parsed.dir)
+          .replace(/\[base\]/gi, parsed.base)
+          .replace(/\[ext\]/gi, parsed.ext)
+          .replace(/\[name\]/gi, parsed.name);
+      } else if (typeof outputName === 'function')  {
+        // Use opts.outputName as output path callback option
+        outputName = outputName(sourcePath);
+      }
+      // opts.TYPE: Compose legacy "type"
+      verifyOptionType(sourcePath, 'type', opts.type);
+      var type = opts.type;
+      if (typeof type === 'string') {
+        // Use opts.type as output path template
+        type = type
+          .replace(/\[root\]/gi, parsed.root)
+          .replace(/\[dir\]/gi, parsed.dir)
+          .replace(/\[base\]/gi, parsed.base)
+          .replace(/\[ext\]/gi, parsed.ext)
+          .replace(/\[name\]/gi, parsed.name);
+      } else if (typeof type === 'function')  {
+        // Use opts.type as output path callback
+        type = type(sourcePath);
+      }
+
+      // Compose output file's path from "dist", "outputName" and "type" options
+      outputFile = path.join(dist, (outputName + type));
+
     }
 
-    // Write to output file
-    fs.writeFile(outputFile, formatFileOutput(mappings, path.parse(outputFile).ext));
+    // If output file resolved, write to output file
+    if (outputFile) fs.writeFile(outputFile, formatFileOutput(mappings, path.parse(outputFile).ext));
+
   };
 }
 
