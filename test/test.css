@@ -5,7 +5,7 @@
 .sdf, .tee, body {
     color: white;
 }
-.adf {
+.adf:not(.sdf) {
     color: yellow;
 }
 

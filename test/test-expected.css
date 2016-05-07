@@ -5,7 +5,7 @@
 .sdf-hn3hq7, .tee-6n4cxy, body {
     color: white;
 }
-.adf-986n6q {
+.adf-986n6q:not(.sdf-hn3hq7) {
     color: yellow;
 }
 

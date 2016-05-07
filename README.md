@@ -18,14 +18,14 @@ This plugin is inspired by [extract-text-webpack-plugin](https://github.com/webp
 **Input**
 
 ```css
-.foo {
+.foo:not(.bar) {
   ...
 }
 ```
 
 **Output**
 ```css
-.foo-sdijhfdsifj1 {
+.foo-7snm3d:not(.bar-8kb5qn) {
   ...
 }
 ```
@@ -34,7 +34,8 @@ then it would generate the corresponding `js/json` file.
 
 ```js
 module.exports = {
-  foo: "foo-sdijhfdsifj1"
+  "foo": "foo-7snm3d",
+  "bar": "bar-8kb5qn"
 }
 ```
 
@@ -82,103 +83,149 @@ gulp.task('default', function() {
 
 ### Options
 
+
 #### `hashType`
 
-Value: `sha1`, `md5`, `sha256`, `sha512`
+Hashing algorithm used when hashing classnames and source files' paths.
 
-Default: `md5`
+Default: `"md5"`
+
+Value: `"sha1"`, `"md5"`, `"sha256"`, `"sha512"`
+
 
 #### `digestType`
 
-Value: `hex`, `base26`, `base32`, `base36`, `base49`, `base52`, `base58`, `base62`, `base64`
+Hash output format.
 
-Default: `base32`
+Default: `"base32"`
+
+Allowed values: `"hex"`, `"base26"`, `"base32"`, `"base36"`, `"base49"`, `"base52"`, `"base58"`, `"base62"`, `"base64"`
+
 
 #### `maxLength`
 
-Value: maxLength the maximum length in chars
+Hash output max length.
 
-Default: 6
+Default: `6`
 
-**ps**: reference [loader-utils.getHashDigest](https://github.com/webpack/loader-utils#gethashdigest) to know more.
+Allowed values: maxLength the maximum length in chars (See [loader-utils.getHashDigest](https://github.com/webpack/loader-utils#gethashdigest) for reference)
+
 
 #### `classnameFormat`
 
+Used to set the output format of your classname.
+
 Default: `[classname]-[hash]`
 
-You can set the output format of your classname.
+Allowed values:
 
-Take `.example` this class name as the example:
+* Explicit value: `"my-classname"`
 
-* without hash string. (it return the origin classname)
+` .A, .b { ... } ` => ` .myclassname, .my-classname { ... } `
 
-`[classname]` => output: `example`
+* Template value: `"myclass-[classname]-[hash]"`
 
-* with prefix and without hash string
+` .A, .b { ... } ` => ` .myclass-A-425tvq, .myclass-b-5gbwsr { ... } `
 
-`prefix-[classname]` => output: `prefix-example`
+  Template words supported: `"classname"`, `"hash"`, `"classnamehash"`, `"sourcepathash"`
 
-* with prefix, suffix and hash string
+* Callback function (gets passed original classname and source file's path): `(classname, sourcePath) => { return classname + '-' + Math.round(1000*Math.random()); }`
 
-`prefix-[classname]-suffix-[hash] => output: `prefix-example-suffix-sdjif12`
+` .A, .b { ... } ` => ` .A-881, .b-123 { ... } `
 
-Of course, you can insert any word at any position you want, like
 
-`prefix_[classname]___sufix-[hash]-hey111`
+### `output`
 
-Just remember to keep the `[classname]` and `[hash]` word.
+Defines output file's path.
 
-**ps**:
+Default: `none` (if not set, will be constructed from options `dist`, `outputName` and `type`)
 
-```
-You may find that you dont need to write [classname].
+Allowed values:
 
-Yeah it's permit. I don't add too many limititation.
+* Explicit value: `"./style.js"`
 
-Maybe you would need your classname without origin classname in some case.
-```
+`./css/style.css` => `./style.js`
 
-#### `outputName`
+* Template value: `"[dir]/[name]-output.json"`
 
-filename of the `.js/.json`
+`./css/style.css` => `./css/style-output.json`
 
-Default: `style`
+  Template words supported: `"root"`, `"dir"`, `"base"`, `"ext"`, `"name"` (See [path.parse()](https://nodejs.org/api/path.html) for reference)
 
-You can set the output format of your `.js/.json` file's filename.
+* Callback function (gets passed source file's path): `(sourcePath) => { return Math.round(1000*Math.random()) + '.js'; }`
 
-Take this source file `mystyle.css` as the example:
+`./css/style.css` => `./114.js`
 
-* keeping original filename
-
-`[name]` => output: `mystyle.js/json`
-
-* with prefix and keeping original filename
-
-`prefix-[name]` => output: `prefix-mystyle.js/json`
-
-* with prefix, suffix keeping original filename
-
-`prefix-[name]-suffix` => output: `prefix-mystyle-suffix.js/json`
-
-You can also make `outputName` a callback function that resolves the file on the spot.
-
-The callback function will get the source file's path passed as only argument if source file is known:
-
-* use callback function
-
-function (source) { return (source ? path.parse(source).name : 'style'; } => output: `mystyle.js/json`
 
 #### `dist`
 
-destination folder of your output js/json
+Defines output file's target directory. Used only is `output` option empty.
 
-Default: same path with css file
+Default: Same path as source file's
+
+Allowed values:
+
+* Explicit value: `"./processed-styles"`
+
+`./css/style.css` => `./processed-styles/style.js`
+
+* Template value: `"[dir]/processed-styles"`
+
+`./css/style.css` => `./css/processed-styles/style.js`
+
+  Template words supported: `"root"`, `"dir"`, `"base"`, `"ext"`, `"name"` (See [path.parse()](https://nodejs.org/api/path.html) for reference)
+
+* Callback function (gets passed source file's path): `(sourcePath) => { return sourcePath + '/processed-styles'; }`
+
+`./css/style.css` => `./css/processed-styles/style.js`
+
+
+#### `outputName`
+
+Defines output file's filename. Used only is `output` option empty.
+
+Default: `"style"`
+
+Allowed values:
+
+* Explicit value: `"my-style"`
+
+`./css/style.css` => `./my-style.js`
+
+* Template value: `"[name]-processed"`
+
+`./css/style.css` => `./style-processed.js`
+
+  Template words supported: `"root"`, `"dir"`, `"base"`, `"ext"`, `"name"` (See [path.parse()](https://nodejs.org/api/path.html) for reference)
+
+* Callback function (gets passed source file's path): `(sourcePath) => { return Math.round(1000*Math.random()); }`
+
+`./css/style.css` => `./984.js`
+
+
 
 #### `type`
 
-Value: `.js` or `.json`
+Defines output file's extension - `".js"` and `".json"` supported. Used only is `output` option empty.
 
-Default: `.js`
+Default: `".js"`
+
+Allowed values:
+
+* Explicit value: `".json"`
+
+`./css/style.css` => `./style.json`
+
+* Template value: `"[ext].js"`
+
+`./css/style.css` => `./style.css.js`
+
+  Template words supported: `"root"`, `"dir"`, `"base"`, `"ext"`, `"name"` (See [path.parse()](https://nodejs.org/api/path.html) for reference)
+
+* Callback function (gets passed source file's path): `(sourcePath) => { return Math.round(1000*Math.random()) + '.js'; }`
+
+`./css/style.css` => `./style.984.js`
+
 
 
 ## License

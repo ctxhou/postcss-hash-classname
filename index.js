@@ -178,7 +178,7 @@ function plugin(opts) {
   opts.maxLength = opts.maxLength || 6;
   opts.classnameFormat = opts.classnameFormat || "[classname]-[hash]";
   opts.output = opts.output || null;
-  opts.dist = opts.dist || './';
+  opts.dist = opts.dist || '.';
   opts.outputName = opts.outputName || 'style';
   opts.type  = opts.type || '.js';
 
@@ -262,8 +262,8 @@ function plugin(opts) {
 
     }
 
-    // If output file resolved, write to output file
-    if (outputFile) fs.writeFile(outputFile, formatFileOutput(mappings, path.parse(outputFile).ext));
+    // If output file resolved, write to output file (in case of multiple writes to same file, sync write makes sure streams don't overlap)
+    if (outputFile) fs.writeFileSync(outputFile, formatFileOutput(mappings, path.parse(outputFile).ext));
 
   };
 }
