@@ -4,7 +4,15 @@
 
 **postcss-hash-classname** is a [PostCSS] plugin to append the hash string to your css class name.
 
-This plugin is inspired by [extract-text-webpack-plugin](https://github.com/webpack/extract-text-webpack-plugin). I really like webpack and extract-text-webpack-plugin used to solve the css scope problem. In some cases, your projcet doesn't work with webpack or you want to package your projcet to a commonjs/amd/umd library which can't require `css` file. If you still want to keep the unique class name property, this plugin can do the trick!
+This plugin is inspired by [extract-text-webpack-plugin](https://github.com/webpack/extract-text-webpack-plugin). I really like webpack and extract-text-webpack-plugin used to solve the css scope problem.
+
+But at below cases, we can't require css file directly.
+
+* you want to do the server-side render with unique css classname
+* your projcet doesn't work with webpack
+* you want to package your projcet to a commonjs/amd/umd library which can't require `css` file.
+
+If above is your use case, and you still want to keep the unique class name property, this plugin can do the trick!
 
 [PostCSS]: https://github.com/postcss/postcss
 [ci-img]:  https://travis-ci.org/ctxhou/postcss-hash-classname.svg
@@ -228,6 +236,10 @@ Allowed values:
 
 `./css/style.css` => `./style.984.js`
 
+
+## Contributors
+
+* ofzza([@ofzza](https://github.com/ofzza))
 
 
 ## License
