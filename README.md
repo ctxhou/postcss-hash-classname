@@ -129,9 +129,11 @@ Allowed values:
 
   Template words supported: `"classname"`, `"hash"`, `"classnamehash"`, `"sourcepathash"`
 
-* Callback function (gets passed original classname and source file's path): `(classname, sourcePath) => { return classname + '-' + Math.round(1000*Math.random()); }`
+* Callback function (gets passed original classname and source file's path): `(classname, sourcePath) => { return path.parse(sourcePath).name + '-' + classname; }`
 
-` .A, .b { ... } ` => ` .A-881, .b-123 { ... } `
+foo.css: ` .A, .b { ... } ` => ` .foo.-A, .foo-b { ... } `
+
+bar.css:` .A, .b { ... } ` => ` .bar-A, .bar-b { ... } `
 
 
 ### `output`
